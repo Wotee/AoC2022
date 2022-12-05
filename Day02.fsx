@@ -1,60 +1,15 @@
-let input =
+let rounds =
     System.IO.File.ReadAllLines("inputs/02.txt")
-    |> Array.map (fun s -> s.Split(" ", System.StringSplitOptions.RemoveEmptyEntries))
+    |> Array.map (fun s -> (int s[0] - int 'A', int s[2] - int 'X'))
 
-type RPS = 
-    | Rock
-    | Paper
-    | Scissors
+// rock 0, paper 1, scissors 2
+// you + 1 => points from your choice
+// (you - opp + 4) % 3 => lose = 0, tie = 1, win = 2
+rounds
+|> Array.sumBy (fun (opp, you)  -> you + 1 + ((you - opp + 4) % 3) * 3)
+|> printfn "Part 1: %i"
 
-module RPS = 
-    let fromString = function
-        | "A"
-        | "X" -> Rock
-        | "B"
-        | "Y" -> Paper
-        | "C"
-        | "Z" -> Scissors
-
-type Result = 
-    | Win
-    | Draw
-    | Lose
-
-module Result = 
-    let fromString = function
-        | "X" -> Lose
-        | "Y" -> Draw
-        | "Z" -> Win
-
-let pointsFromRound [|opponent;me|] =
-    match opponent, me with
-    | Rock, Rock -> 1 + 3
-    | Rock, Paper -> 2 + 6
-    | Rock, Scissors -> 3 + 0
-    | Paper, Rock -> 1 + 0
-    | Paper, Paper -> 2 + 3
-    | Paper, Scissors -> 3 + 6
-    | Scissors, Rock -> 1 + 6
-    | Scissors, Paper -> 2 + 0
-    | Scissors, Scissors -> 3 + 3
-
-input
-|> Array.sumBy (Array.map RPS.fromString >> pointsFromRound)
-// 14069
-
-
-input
-|> Array.sumBy (fun ([|opponent; result|]) ->
-    match RPS.fromString opponent, Result.fromString result with
-    | Rock, Win -> 2 + 6
-    | Rock, Draw -> 1 + 3
-    | Rock, Lose -> 3 + 0
-    | Paper, Win -> 3 + 6
-    | Paper, Draw -> 2 + 3
-    | Paper, Lose -> 1 + 0
-    | Scissors, Win -> 1 + 6
-    | Scissors, Draw -> 3 + 3
-    | Scissors, Lose -> 2 + 0
-)
-// 12411
+// (opp + res + 2) % 3 => your choice, same + 1 as prev
+rounds
+|> Array.sumBy (fun (opp, res) -> ((opp + res + 2) % 3) + 1 + res * 3)
+|> printfn "Part 2: %i"
