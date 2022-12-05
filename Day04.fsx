@@ -1,12 +1,11 @@
-let input =
+let inp =
     System.IO.File.ReadAllLines("inputs/04.txt")
-    |> Array.map (fun s -> s.Split([|','; '-'|]))
-    |> Array.map (fun [|a;b;c;d|] -> [(int a)..(int b)] |> Set.ofList, [(int c)..(int d)] |> Set.ofList)
+    |> Array.map (fun row -> row.Split[|',';'-'|] |> Array.map int)
 
-input
-|> Array.sumBy (fun (a, b) -> if a |> Set.isSubset b || b |> Set.isSubset a then 1 else 0)
+inp
+|> Array.sumBy (fun [|a;b;c;d|] -> System.Convert.ToInt32((a <= c && b >= d) || (a >= c && b <= d)))
 |> printfn "Part 1: %i"
 
-input
-|> Array.sumBy(fun (a, b) -> if a |> Set.intersect b |> Set.isEmpty then 0 else 1)
+inp
+|> Array.sumBy (fun [|a;b;c;d|] -> System.Convert.ToInt32((a <= d && b >= c) || (d >= a && c <= b)))
 |> printfn "Part 2: %i"
