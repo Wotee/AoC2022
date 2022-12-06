@@ -1,9 +1,9 @@
 let input = System.IO.File.ReadAllText("inputs/06.txt")
 
-let solve length = 
-    Seq.windowed length
-    >> Seq.findIndex(fun x -> x |> Seq.distinct |> Seq.length = length)
-    >> (+) length
+let solve len = 
+    Seq.windowed len
+    >> Seq.findIndex(Seq.distinct >> Seq.length >> (=) len)
+    >> (+) len
 
 input 
 |> solve 4
