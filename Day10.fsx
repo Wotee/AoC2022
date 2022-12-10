@@ -1,15 +1,8 @@
 open System
-let input =
+let values =
     IO.File.ReadAllLines("inputs/10.txt")
     |> Array.collect (fun x -> x.Split(" "))
-
-let values = 
-    input
-    |> Array.scan (fun acc elem ->
-        match Int32.TryParse elem with
-        | true, x -> acc + x
-        | false, _ -> acc
-    ) 1
+    |> Array.scan (fun acc -> Int32.TryParse >> function | true, x -> acc + x | false, _ -> acc) 1
 
 let getVal (values : int array) i = values[i-1] * i
 
