@@ -23,7 +23,7 @@ let rec addSand (x, y) floor obstacles =
     else
         if floor && y >= maxY + 1 then
             let obs = obstacles |> Set.add (x, y)
-            Some(obs, obs)
+            Some(obstacles, obs)
         else
             match obstacles |> Set.contains(x, y + 1), obstacles |> Set.contains(x - 1, y + 1), obstacles |> Set.contains(x + 1, y + 1) with
             | false, _, _ -> addSand (x, y + 1) floor obstacles
@@ -31,7 +31,7 @@ let rec addSand (x, y) floor obstacles =
             | _, _, false -> addSand (x + 1, y + 1) floor obstacles
             | _ ->
                 let obs = obstacles |> Set.add (x, y)
-                Some(obs, obs)
+                Some(obstacles, obs)
 
 Seq.unfold (addSand sandPour false) rocks
 |> Seq.length
